@@ -5,7 +5,7 @@ import Footer from "../footer/footer";
 import Header from "../header/header";
 import Preview from "../preview/preview";
 import styles from "./maker.module.css";
-const Maker = ({ authService }) => {
+const Maker = ({ authService, FileInput }) => {
   const history = useHistory();
   const [cards, setCards] = useState({
     1: {
@@ -16,7 +16,7 @@ const Maker = ({ authService }) => {
       title: "Software Engineer",
       email: "ri2377@naver.com",
       message: "go for it",
-      fileName: "Giseok",
+      fileName: null,
       fileURL: null,
     },
     2: {
@@ -27,7 +27,7 @@ const Maker = ({ authService }) => {
       title: "Software Engineer",
       email: "ri2377@naver.com",
       message: "go for it",
-      fileName: "Giseok",
+      fileName: null,
       fileURL: null,
     },
     3: {
@@ -38,7 +38,7 @@ const Maker = ({ authService }) => {
       title: "Software Engineer",
       email: "ri2377@naver.com",
       message: "go for it",
-      fileName: "Giseok",
+      fileName: null,
       fileURL: null,
     },
   });
@@ -64,7 +64,7 @@ const Maker = ({ authService }) => {
       const updated = { ...cards }; // 콜백 과정을 거친다.
       updated[card.id] = card; // 새로 업데이트 된 애를 업데이트 해준다.
       // 기존에 없던 id라면 오브젝트에 추가해주기 때문에 add의 기능을 포함하고 있다.
-      return;
+      return updated;
     });
   };
 
@@ -80,6 +80,7 @@ const Maker = ({ authService }) => {
       <Header onLogout={onLogout} />
       <div className={styles.container}>
         <Editor
+          FileInput={FileInput}
           cards={cards}
           addCard={createOrUpdateCard}
           deleteCard={deleteCard}

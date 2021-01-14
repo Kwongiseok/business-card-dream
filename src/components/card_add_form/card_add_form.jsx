@@ -1,8 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import Button from "../button/button";
-import ImageFileInput from "../image_file_input/image_file_input";
 import styles from "./card_add_form.module.css";
-const CardAddForm = ({ onAdd }) => {
+const CardAddForm = ({ FileInput, onAdd }) => {
   const formRef = useRef();
   const nameRef = useRef();
   const companyRef = useRef();
@@ -10,7 +9,15 @@ const CardAddForm = ({ onAdd }) => {
   const emailRef = useRef();
   const messageRef = useRef();
   const themeRef = useRef();
-  //  fileName, fileURL;
+  // const fileName, fileURL;
+  const [file, setFile] = useState({ fileName: null, fileURL: null });
+  const onFileChange = (file) => {
+    console.log(file);
+    setFile({
+      fileName: file.name,
+      fileURL: file.url,
+    });
+  };
   const onSubmit = (event) => {
     event.preventDefault();
     const card = {
@@ -21,10 +28,11 @@ const CardAddForm = ({ onAdd }) => {
       title: titleRef.current.value || "",
       email: emailRef.current.value || "",
       message: messageRef.current.value || "",
-      fileName: "",
-      fileURL: "",
+      fileName: file.fileName || "",
+      fileURL: file.fileURL || "",
     };
     formRef.current.reset(); // 폼이 전부다 리셋되도록
+    setFile({ fileName: null, fileURL: null });
     onAdd(card);
   };
   return (
@@ -69,7 +77,7 @@ const CardAddForm = ({ onAdd }) => {
         placeholder="message"
       ></textarea>
       <div className={styles.fileInput}>
-        <ImageFileInput />
+        <FileInput onFileChange={onFileChange} fileName={file.fileName} />
       </div>
       <Button name="Add" onClick={onSubmit} />
     </form>
