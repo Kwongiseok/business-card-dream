@@ -30,7 +30,7 @@ const Login = ({ authService }) => {
   });
   return (
     <section className={styles.login}>
-      <Header onLogout={onLogout} />
+      <Header />
       <section>
         <h1 className={styles.title}>Login</h1>
         <ul className={styles.list}>

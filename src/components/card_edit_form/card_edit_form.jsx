@@ -8,6 +8,7 @@ const CardEditForm = ({ FileInput, card, deleteCard, updateCard }) => {
   const titleRef = useRef();
   const emailRef = useRef();
   const messageRef = useRef();
+  const themeRef = useRef();
   const {
     name,
     company,
@@ -57,7 +58,13 @@ const CardEditForm = ({ FileInput, card, deleteCard, updateCard }) => {
         value={company}
         onChange={onChange}
       />
-      <select className={styles.select} name="theme" value={theme}>
+      <select
+        className={styles.select}
+        name="theme"
+        value={theme}
+        ref={themeRef}
+        onChange={onChange}
+      >
         <option value="light">light</option>
         <option value="dark">dark</option>
         <option value="colorful">colorful</option>

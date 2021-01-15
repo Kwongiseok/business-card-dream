@@ -5,54 +5,52 @@ import Footer from "../footer/footer";
 import Header from "../header/header";
 import Preview from "../preview/preview";
 import styles from "./maker.module.css";
-const Maker = ({ authService, FileInput }) => {
+// 2: {
+//   id: "2",
+//   name: "YJ",
+//   company: "Kakao",
+//   theme: "light",
+//   title: "Software Engineer",
+//   email: "ri2377@naver.com",
+//   message: "go for it",
+//   fileName: null,
+//   fileURL: null,
+// },
+const Maker = ({ authService, dbService, FileInput }) => {
   const history = useHistory();
-  const [cards, setCards] = useState({
-    1: {
-      id: "1",
-      name: "Giseok",
-      company: "Kakao",
-      theme: "dark",
-      title: "Software Engineer",
-      email: "ri2377@naver.com",
-      message: "go for it",
-      fileName: null,
-      fileURL: null,
-    },
-    2: {
-      id: "2",
-      name: "YJ",
-      company: "Kakao",
-      theme: "light",
-      title: "Software Engineer",
-      email: "ri2377@naver.com",
-      message: "go for it",
-      fileName: null,
-      fileURL: null,
-    },
-    3: {
-      id: "3",
-      name: "YS",
-      company: "Kakao",
-      theme: "colorful",
-      title: "Software Engineer",
-      email: "ri2377@naver.com",
-      message: "go for it",
-      fileName: null,
-      fileURL: null,
-    },
+  const historyState = history.location.state;
+  const [cards, setCards] = useState({});
+  const [uid, setUid] = useState(historyState && historyState.id);
+
+  useEffect(() => {
+    authService.onAuthChange((user) => {
+      if (user) {
+        setUid(historyState && historyState.id);
+      } else {
+        history.push("/");
+      }
+    });
   });
+
+  useEffect(() => {
+    if (!uid) {
+      return;
+    }
+    dbService.readUserData(uid).then((snapshot) => setCards(snapshot.val()));
+
+    return () => {}; // 컴포넌트가 언마운트 됐을 때 return은 알아서 호출해준다
+  }, [uid]);
+
   const onLogout = () => {
     authService //
       .logout();
   };
-  // const addCard = (card) => {
-  //   setCards([...cards, card]);
-  // };
+
   const deleteCard = (card) => {
     const updated = { ...cards };
     delete updated[card.id];
     setCards(updated);
+    dbService.deleteUserData(uid, card["id"]);
   };
   const createOrUpdateCard = (card) => {
     // const updated = { ...cards };
@@ -66,15 +64,9 @@ const Maker = ({ authService, FileInput }) => {
       // 기존에 없던 id라면 오브젝트에 추가해주기 때문에 add의 기능을 포함하고 있다.
       return updated;
     });
+    dbService.writeUserData(uid, card);
   };
 
-  useEffect(() => {
-    authService.onAuthChange((user) => {
-      if (!user) {
-        history.push("/");
-      }
-    });
-  });
   return (
     <section className={styles.maker}>
       <Header onLogout={onLogout} />
