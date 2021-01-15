@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Editor from "../editor/editor";
 import Footer from "../footer/footer";
@@ -41,10 +41,11 @@ const Maker = ({ authService, dbService, FileInput }) => {
     return () => {}; // 컴포넌트가 언마운트 됐을 때 return은 알아서 호출해준다
   }, [uid, dbService]);
 
-  const onLogout = () => {
+  const onLogout = useCallback(() => {
     authService //
       .logout();
-  };
+  }, [authService]); // 중요 authService가 변경이 되면 새로운 계정의 logout을 불러줘야한다!
+  // 캐시가 되도록 하되, 디펜더시를 잘 파악해서 코드를 작성해야한다.
 
   const deleteCard = (card) => {
     const updated = { ...cards };
