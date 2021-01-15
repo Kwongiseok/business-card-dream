@@ -30,7 +30,7 @@ const Maker = ({ authService, dbService, FileInput }) => {
         history.push("/");
       }
     });
-  });
+  }, [uid, authService, history, historyState]);
 
   useEffect(() => {
     if (!uid) {
@@ -39,7 +39,7 @@ const Maker = ({ authService, dbService, FileInput }) => {
     dbService.readUserData(uid).then((snapshot) => setCards(snapshot.val()));
 
     return () => {}; // 컴포넌트가 언마운트 됐을 때 return은 알아서 호출해준다
-  }, [uid]);
+  }, [uid, dbService]);
 
   const onLogout = () => {
     authService //
